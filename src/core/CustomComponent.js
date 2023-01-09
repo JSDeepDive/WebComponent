@@ -7,6 +7,8 @@ export default class CustomComponent {
   constructor(target) {
     this.target = target;
     this.initialStateSetup();
+    // 이벤트 버블링을 통해 삭제 이벤트 처리하기위해서는 컴포넌트 라이프사이클 위치 변경 필요
+    this.setEventListener();
     this.render();
   }
   /*
@@ -24,7 +26,7 @@ export default class CustomComponent {
    **/
   render() {
     this.target.innerHTML = this.getChild();
-    this.setEventListener();
+    // this.setEventListener();
   }
   /*
    * setEventListener : 컴포넌트에 이벤트 리스너 추가.
