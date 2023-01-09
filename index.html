@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<h1>Example 1</h1>
+	<p>상태를 가진 컴포넌트 구현:
+	<ol>
+		<li>버튼 클릭시마다 setState를 호출하여 리스트에 아이템 추가.</li>
+		<li>setState에서 render 함수 호출해 리렌더링 수행.</li>
+	</ol>
+	</p>
+	<div id="state"></div>
+	<div id="app"></div>
+	<script>
+		const initialItems = ['item1', 'item2', 'item3']
+		let state = {
+			items: initialItems
+		}
+
+		/*
+		 * render: 현재 상태값 기반으로 아이템 리스트와 아이템 추가 버튼을 화면에 렌더링. 
+		 **/
+		const render = () => {
+			const { items } = state;
+
+			document.querySelector('#state').innerHTML = `
+				current state: ${JSON.stringify(state)}
+			`
+
+			document.querySelector('#app').innerHTML = `
+			<ul >
+			${items.map((item) => `<li>${item}</li>`).join('')}
+				</ul >
+			<button id='append'>Append Item</button>
+			`
+
+			document.querySelector('#append').addEventListener('click', () => {
+				setState({ items: [...items, `item${items.length + 1}`] })
+			})
+		}
+
+		/* 
+		 * setState: 신규 상태값으로 상태를 변경하고, render 함수 호출해 리렌더링.
+		 * @newState object
+		 **/
+		const setState = (newState) => {
+			state = { ...state, ...newState };
+			render();
+		}
+
+		render();
+	</script>
+</body>
+
+</html>
