@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
 	<meta charset="UTF-8">
@@ -32,6 +32,13 @@
 		<div id="app2"></div>
 	</details>
 	<hr />
+
+	<h3>Example 3</h3>
+	<details>
+		<summary>모듈화</summary>
+		<div id="app3"></div>
+	</details>
+	<script src="./src/app.js" type="module"></script>
 	<script>
 
 		const initialItems = ['item1', 'item2', 'item3']
@@ -96,9 +103,6 @@
 			 * render : 컴포넌트 렌더링해 화면에 표시.
 			**/
 			render() {
-				document.querySelector('#state2').innerHTML = `
-				current state: ${JSON.stringify(this.state)}
-				`
 				this.target.innerHTML = this.getChild();
 				this.setEventListener();
 			}
