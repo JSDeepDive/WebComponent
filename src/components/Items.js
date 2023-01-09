@@ -45,19 +45,30 @@ export default class Items extends CustomComponent {
     /*
      * 상위 요소인 target에만 이벤트 등록해도 이벤트 버블링에 의해 감지 가능
      **/
-    this.target.addEventListener("click", (event) => {
+    // this.target.addEventListener("click", (event) => {
+    //   const { items } = this.state;
+
+    //   const classList = event.target.classList;
+
+    //   if (classList.contains("append")) {
+    //     this.setState({ items: [...items, `item${items.length + 1}`] });
+    //   }
+
+    //   if (classList.contains("delete")) {
+    //     items.splice(event.target.id, 1);
+    //     this.setState({ items });
+    //   }
+    // });
+
+    this.handleEventBubble("click", ".append", () => {
       const { items } = this.state;
+      this.setState({ items: [...items, `item${items.length + 1}`] });
+    });
 
-      const classList = event.target.classList;
-
-      if (classList.contains("append")) {
-        this.setState({ items: [...items, `item${items.length + 1}`] });
-      }
-
-      if (classList.contains("delete")) {
-        items.splice(event.target.id, 1);
-        this.setState({ items });
-      }
+    this.handleEventBubble("click", ".delete", (event) => {
+      const items = [...this.state.items];
+      items.splice(event.target.id, 1);
+      this.setState({ items });
     });
   }
 }

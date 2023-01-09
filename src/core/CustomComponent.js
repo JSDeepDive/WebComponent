@@ -39,4 +39,21 @@ export default class CustomComponent {
     this.state = { ...this.state, ...newState };
     this.render();
   }
+
+  // TODO 다시보기
+  /*
+   * handleEventBubble : 이벤트 버블링을 활용한 이벤트 리스너 등록 함수
+   **/
+  handleEventBubble(eventType, selector, cbFunc) {
+    const children = [...this.target.querySelectorAll(selector)];
+
+    // selector에 명시한 것보다 더 하위요소가 선택되는 경우를 무시하기 위한 코드
+    const isTarget = (target) =>
+      children.includes(target) || target.closest(selector);
+
+    this.target.addEventListener(eventType, (event) => {
+      if (!isTarget(event.target)) return false;
+      cbFunc(event);
+    });
+  }
 }
