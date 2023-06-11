@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<h3>Example 1</h3>
+	<details>
+		<summary>상태를 가진 컴포넌트 구현</summary>
+		<ol>
+			<li>버튼 클릭시마다 setState를 호출하여 리스트에 아이템 추가.</li>
+			<li>setState에서 render 함수 호출해 리렌더링 수행.</li>
+			<li>클래스 문법을 통해 추상화</li>
+		</ol>
+		<div id="state"></div>
+		<div id="app"></div>
+	</details>
+
+	<hr />
+	<h3>Example 2</h3>
+	<details>
+		<summary>클래스 문법 통해 추상화</summary>
+		<ol>
+			<li>컴포넌트 생성 방법 강제.</li>
+		</ol>
+		<div id="state2"></div>
+		<div id="app2"></div>
+	</details>
+	<hr />
+
+	<h3>Example 3</h3>
+	<details>
+		<summary>모듈화</summary>
+		<div id="app3"></div>
+	</details>
+	<script src="./src/app.js" type="module"></script>
+	<script>
+
+		const initialItems = ['item1', 'item2', 'item3']
+		let state = {
+			items: initialItems
+		}
+
+		/*
+		 * render: 현재 상태값 기반으로 아이템 리스트와 아이템 추가 버튼을 화면에 렌더링. 
+		**/
+		const render = () => {
+			const { items } = state;
+
+			document.querySelector('#state').innerHTML = `
+				current state: ${JSON.stringify(state)}
+			`
+
+			document.querySelector('#app').innerHTML = `
+			<ul >
+			${items.map((item) => `<li>${item}</li>`).join('')}
+				</ul >
+			<button id='append'>Append Item</button>
+			`
+
+			document.querySelector('#append').addEventListener('click', () => {
+				setState({ items: [...items, `item${items.length + 1}`] })
+			})
+		}
+
+		/* 
+		 * setState: 신규 상태값으로 상태를 변경하고, render 함수 호출해 리렌더링.
+		 * @newState object
+		**/
+		const setState = (newState) => {
+			state = { ...state, ...newState };
+			render();
+		}
+
+		render();
+
+
+		/*
+		 * CustomComponent : 추상화 통해 컴포넌트 사용 방법 강제. 
+		**/
+		class CustomComponent {
+			target;
+			state;
+			constructor(target) {
+				this.target = target;
+				this.initialStateSetup();
+				this.render();
+			}
+			/* 
+			 * initialSetup : 초기 상태값 설정.
+			**/
+			initialStateSetup() { };
+			/* 
+			 * getChild : 초기 컴포넌트 내부에 들어갈 child Components 문바열 형태로 반환. 
+			**/
+			getChild() { return ''; }
+			/*
+			 * render : 컴포넌트 렌더링해 화면에 표시.
+			**/
+			render() {
+				this.target.innerHTML = this.getChild();
+				this.setEventListener();
+			}
+			/*
+			 * setEventListener : 컴포넌트에 이벤트 리스너 추가.
+			**/
+			setEventListener() { }
+			/*
+			 * setState : 컴포넌트 내부 상태 변경.
+			**/
+			setState(newState) {
+				this.state = { ...this.state, ...newState };
+				this.render();
+			}
+		}
+
+		class App extends CustomComponent {
+			initialStateSetup() {
+				this.state = { items: initialItems };
+			}
+			getChild() {
+				const { items } = this.state;
+				return `
+					<ul>
+						${items.map(item => `<li>${item}</li>`).join('')}
+					</ul>
+					<button id='append'>Item 추가</button>
+    		`
+			}
+			setEventListener() {
+				this.target.querySelector('button').addEventListener('click', () => {
+					const { items } = this.state;
+					this.setState({ items: [...items, `item${items.length + 1}`] });
+				});
+			}
+		}
+
+		new App(document.querySelector('#app2'));
+	</script>
+</body>
+
+</html>
